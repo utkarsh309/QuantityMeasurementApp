@@ -1,59 +1,47 @@
 package com.quantitymeasurementapp;
 
 public class QuantityMeasurementApp {
-	
-	//Inner class representing Feet measurement
-	public static class Feet{
-		
-		private final double value;
-		
-		//Constructor
-		public Feet(double value) {
-			this.value=value;
-		}
-		
-		//getter method
-		public double getValue() {
-			return value;
-		}
-		
-		@Override
-		public boolean equals(Object obj) {
-			
-			//Same reference
-			if(this==obj) {
-				return true;
-			}
-			
-			//Null check
-			if(obj==null) {
-				return false;
-			}
-			
-			//Type Check
-			if(this.getClass()!=obj.getClass()) {
-				return false;
-			}
-			
-			//Cast safety
-			Feet other=(Feet)obj;
-			
-			//Compare using Double.compare()
-			return Double.compare(this.value, other.value)==0;
-		}
-		
-		
-	}
-	
-	//Inner class representing Inch measurement
-	public static class Inches {
 
-        private final double value;
+    
+	//Enum representing supported length units.
+    public enum LengthUnit {
 
-        public Inches(double value) {
-            this.value = value;
+        FEET(12.0),      // 1 foot = 12 inches
+        INCHES(1.0);     // Base unit
+
+        private final double conversionFactor;
+
+        LengthUnit(double conversionFactor) {
+            this.conversionFactor = conversionFactor;
         }
 
+        public double getConversionFactor() {
+            return conversionFactor;
+        }
+    }
+
+    //Generic Length class handling all unit types
+    public static class Length {
+
+        private final double value;
+        private final LengthUnit unit;
+
+        public Length(double value, LengthUnit unit) {
+
+            if (unit == null) {
+                throw new IllegalArgumentException("Unit cannot be null");
+            }
+
+            this.value = value;
+            this.unit = unit;
+        }
+
+        //Convert value to base unit (inches)
+        private double convertToBaseUnit() {
+            return this.value * unit.getConversionFactor();
+        }
+
+        
         @Override
         public boolean equals(Object obj) {
 
@@ -66,36 +54,25 @@ public class QuantityMeasurementApp {
             if (this.getClass() != obj.getClass())
                 return false;
 
-            Inches other = (Inches) obj;
+            Length other = (Length) obj;
 
-            return Double.compare(this.value, other.value) == 0;
+            return Double.compare(
+                    this.convertToBaseUnit(),
+                    other.convertToBaseUnit()) == 0;
         }
-        
-        
-    }
-	
-	public static void demonstrateFeetEquality() {
-
-        Feet value1 = new Feet(1.0);
-        Feet value2 = new Feet(1.0);
-
-        System.out.println("Feet Equality: " + value1.equals(value2));
-    }
-	
-	public static void demonstrateInchesEquality() {
-
-        Inches value1 = new Inches(1.0);
-        Inches value2 = new Inches(1.0);
-
-        System.out.println("Inches Equality: " + value1.equals(value2));
     }
 
-	//Main method
-	public static void main(String[] args) {
-		
-		demonstrateFeetEquality();
-        demonstrateInchesEquality();
-		
-	}
+    
+    public static void main(String[] args) {
 
+        Length length1 = new Length(1.0, LengthUnit.FEET);
+        Length length2 = new Length(12.0, LengthUnit.INCHES);
+
+        System.out.println("Are lengths equal? " + length1.equals(length2));
+
+        Length length3 = new Length(1.0, LengthUnit.INCHES);
+        Length length4 = new Length(1.0, LengthUnit.INCHES);
+
+        System.out.println("Same unit equality? " + length3.equals(length4));
+    }
 }
