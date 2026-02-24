@@ -1,13 +1,66 @@
-# QuantityMeasurementApp
+# Quantity Measurement Application
 
-**Trainee:** Utkarsh  
-**Organization:** BridgeLabz Solutions Pvt. Ltd. 
+Trainee – Utkarsh
 
-### 🔹 [18-Feb-2026 (Wednesday)](https://github.com/utkarsh309/QuantityMeasurementApp/tree/feature/UC1-FeetEquality/quantitymeasurementapp)
--   Implemented UC1 – Feet Measurement Equality feature in the Quantity Measurement App.
--   Implemented UC2 - Inch Measurement Equality feature in the Quantity Measurement App.
----
-### 🔹 [19-Feb-2026 (Thursday)](https://github.com/utkarsh309/QuantityMeasurementApp/tree/feature/UC3-GenericLength/quantitymeasurementapp)
--   Implemented UC3 – Generic Length feature in the Quantity Measurement App.
+## 📌 Project Overview
+
+A scalable **Quantity Measurement System** implemented using clean Object-Oriented Programming (OOP) principles.  
+
+The system evolved progressively from basic equality checks to a fully extensible unit conversion framework, supporting multiple units, cross-unit comparisons, and a structured conversion API.
 
 ---
+
+## 🏗 Architecture Hierarchy
+
+QuantityMeasurementApp  
+│  
+├── LengthUnit (Enum)  
+│ ├── FEET  
+│ ├── INCHES  
+│ ├── YARDS  
+│ └── CENTIMETERS  
+│  
+├── Length (Immutable Value Object)  
+│ ├── value  
+│ ├── unit  
+│ ├── convertToBaseUnit()  
+│ ├── convertTo()  
+│ ├── equals()  
+│ ├── hashCode()  
+│ └── toString()  
+│  
+└── Static APIs  
+├── convert()  
+├── demonstrateLengthEquality()  
+└── demonstrateLengthConversion()  
+
+---
+
+## 📈 Use Case Evolution (UC1 → UC5)
+
+### 🟢 UC1 – Basic Equality
+- Implemented equality comparison for **Feet**
+- Overrode `equals()` method
+- Ensured null and type safety
+
+### 🟢 UC2 – Multiple Unit Support
+- Added **Inches** class
+- Separate equality logic for each unit
+- Highlighted code duplication issue
+
+### 🟢 UC3 – Generic Design (DRY Principle Applied)
+- Introduced `LengthUnit` enum
+- Created generic `Length` class
+- Enabled cross-unit equality (e.g., 1 ft == 12 inches)
+
+### 🟢 UC4 – Extended Unit Support
+- Added **Yards** and **Centimeters**
+- No modification required in core logic
+- Demonstrated Open-Closed Principle
+
+### 🟢 UC5 – Unit-to-Unit Conversion API
+- Added static `convert()` method
+- Implemented instance `convertTo()` method
+- Added method overloading
+- Ensured `equals()` and `hashCode()` consistency
+- Implemented rounding to 2 decimal places
