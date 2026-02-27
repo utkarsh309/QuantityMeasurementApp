@@ -145,6 +145,15 @@ public class QuantityMeasurementAppTest {
         assertEquals(new Length(2.0, LengthUnit.FEET), result);
     }
     
+    @Test
+    public void testAddition_ExplicitTargetUnit_Feet() {
+        Length l1 = new Length(1.0, LengthUnit.FEET);
+        Length l2 = new Length(12.0, LengthUnit.INCHES);
+
+        Length result = l1.add(l2, LengthUnit.FEET);
+
+        assertEquals(new Length(2.0, LengthUnit.FEET), result);
+    }
     
     // Overloaded Demonstration Methods
 

@@ -82,6 +82,32 @@ public class QuantityMeasurementApp {
         	return new Length(rounded,this.unit);
         	
         }
+        
+     // UC7: Addition with explicit target unit
+        public Length add(Length other, LengthUnit targetUnit) {
+
+            if (other == null) {
+                throw new IllegalArgumentException("Second operand cannot be null.");
+            }
+
+            if (targetUnit == null) {
+                throw new IllegalArgumentException("Target unit cannot be null.");
+            }
+
+            // Convert both to base unit (inches)
+            double base1 = this.convertToBaseUnit();
+            double base2 = other.convertToBaseUnit();
+
+            // Add base values
+            double sumBase = base1 + base2;
+
+            // Convert to explicitly specified target unit
+            double resultValue = sumBase / targetUnit.getConversionFactor();
+
+            double rounded = Math.round(resultValue * 1000.0) / 1000.0;
+
+            return new Length(rounded, targetUnit);
+        }
 
         
         
@@ -141,6 +167,15 @@ public class QuantityMeasurementApp {
 		}
 		
 		return l1.add(l2);
+	}
+	
+	public static Length add(Length l1, Length l2, LengthUnit targetUnit) {
+
+	    if (l1 == null || l2 == null) {
+	        throw new IllegalArgumentException("Operands cannot be null.");
+	    }
+
+	    return l1.add(l2, targetUnit);
 	}
 	
 	// Demonstrate equality
