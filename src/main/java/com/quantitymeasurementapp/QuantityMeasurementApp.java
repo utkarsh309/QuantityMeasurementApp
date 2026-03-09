@@ -45,5 +45,17 @@ public class QuantityMeasurementApp {
 
         System.out.println("Addition of 1 feet and 12 inches = "
                 + add(l1, l2));
+        
+        Weight w1 = new Weight(1.0, WeightUnit.KILOGRAM);
+        Weight w2 = new Weight(1000.0, WeightUnit.GRAM);
+
+        System.out.println(w1.equals(w2)); 
+        
+        Weight w = new Weight(1.0, WeightUnit.KILOGRAM);
+
+        System.out.println(w.convertTo(WeightUnit.GRAM));
+
+        Weight result = w1.add(w2);
+        System.out.println(result);
     }
 }
