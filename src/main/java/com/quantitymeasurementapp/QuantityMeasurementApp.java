@@ -2,60 +2,51 @@ package com.quantitymeasurementapp;
 
 public class QuantityMeasurementApp {
 
-    public static double convert(double value,LengthUnit source,LengthUnit target) {
-    	
-    	if (!Double.isFinite(value))
-            throw new IllegalArgumentException("Value must be finite.");
+    public static <U extends IMeasurable>
+    boolean demonstrateEquality(Quantity<U> q1, Quantity<U> q2) {
 
-        if (source == null || target == null)
-            throw new IllegalArgumentException("Units cannot be null.");
-
-        double baseValue = source.convertToBaseUnit(value);
-
-        return target.convertFromBaseUnit(baseValue);
+        return q1.equals(q2);
     }
-    
-    public static Length add(Length l1, Length l2) {
 
-        if (l1 == null || l2 == null)
-            throw new IllegalArgumentException("Operand cannot be null");
+    public static <U extends IMeasurable>
+    Quantity<U> demonstrateConversion(Quantity<U> q, U target) {
 
-        return l1.add(l2);
+        return q.convertTo(target);
     }
-    
-	public static Length add(Length l1, Length l2, LengthUnit targetUnit) {
 
-		if (l1 == null || l2 == null)
-			throw new IllegalArgumentException("Operands cannot be null.");
+    public static <U extends IMeasurable>
+    Quantity<U> demonstrateAddition(Quantity<U> q1, Quantity<U> q2) {
 
-		return l1.add(l2, targetUnit);
-	}
-    
-	
-	public static void main(String[] args) {
+        return q1.add(q2);
+    }
 
-        System.out.println("convert(1.0, FEET, INCHES) = "
-                + convert(1.0, LengthUnit.FEET, LengthUnit.INCHES));
+    public static <U extends IMeasurable>
+    Quantity<U> demonstrateAddition(Quantity<U> q1, Quantity<U> q2, U target) {
 
-        System.out.println("convert(3.0, YARDS, FEET) = "
-                + convert(3.0, LengthUnit.YARDS, LengthUnit.FEET));
+        return q1.add(q2, target);
+    }
 
-        Length l1 = new Length(1, LengthUnit.FEET);
-        Length l2 = new Length(12, LengthUnit.INCHES);
+    public static void main(String[] args) {
 
-        System.out.println("Addition of 1 feet and 12 inches = "
-                + add(l1, l2));
-        
-        Weight w1 = new Weight(1.0, WeightUnit.KILOGRAM);
-        Weight w2 = new Weight(1000.0, WeightUnit.GRAM);
+        Quantity<LengthUnit> l1 =
+                new Quantity<>(1.0, LengthUnit.FEET);
 
-        System.out.println(w1.equals(w2)); 
-        
-        Weight w = new Weight(1.0, WeightUnit.KILOGRAM);
+        Quantity<LengthUnit> l2 =
+                new Quantity<>(12.0, LengthUnit.INCHES);
 
-        System.out.println(w.convertTo(WeightUnit.GRAM));
+        System.out.println(l1.equals(l2));
 
-        Weight result = w1.add(w2);
+        Quantity<LengthUnit> result =
+                l1.add(l2, LengthUnit.FEET);
+
         System.out.println(result);
+
+        Quantity<WeightUnit> w1 =
+                new Quantity<>(1.0, WeightUnit.KILOGRAM);
+
+        Quantity<WeightUnit> w2 =
+                new Quantity<>(1000.0, WeightUnit.GRAM);
+
+        System.out.println(w1.equals(w2));
     }
 }

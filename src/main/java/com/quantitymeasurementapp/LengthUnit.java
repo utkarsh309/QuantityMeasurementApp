@@ -1,6 +1,6 @@
 package com.quantitymeasurementapp;
 
-public enum LengthUnit{
+public enum LengthUnit implements IMeasurable{
 	
 	FEET(12.0),              // 1 foot = 12 inches
     INCHES(1.0),             // Base unit
@@ -8,27 +8,31 @@ public enum LengthUnit{
     CENTIMETERS(0.393701);   // 1 cm = 0.393701 inches
 	
 	private final double conversionFactor;
+
+    LengthUnit(double conversionFactor) {
+        this.conversionFactor = conversionFactor;
+    }
+
+    @Override
+    public double getConversionFactor() {
+        return conversionFactor;
+    }
+
+    @Override
+    public double convertToBaseUnit(double value) {
+        return value * conversionFactor;
+    }
+
+    @Override
+    public double convertFromBaseUnit(double baseValue) {
+        return baseValue / conversionFactor;
+    }
+
+    @Override
+    public String getUnitName() {
+        return this.name();
+    }
 	
-	LengthUnit(double conversionFactor){
-		
-		this.conversionFactor=conversionFactor;
-	}
-	
-	public double getConversionFactor() {
-		return conversionFactor;
-	}
-	
-	 // Convert value -> base unit (inches)
-	public double convertToBaseUnit(double value) {
-		double base= value *conversionFactor;
-		return Math.round(base * 100.0)/100.0;
-	}
-	
-	// Convert base unit -> this unit
-	public double convertFromBaseUnit(double baseValue) {
-		double result= baseValue / conversionFactor;
-		return Math.round(result *100.0)/100.0;
-	}
 	
 	
 	
