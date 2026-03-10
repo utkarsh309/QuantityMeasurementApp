@@ -30,17 +30,21 @@ public class QuantityMeasurementApp {
 
     	//Length Unit
         Quantity<LengthUnit> l1 =
-                new Quantity<>(1.0, LengthUnit.FEET);
+                new Quantity<>(2.0, LengthUnit.FEET);
 
         Quantity<LengthUnit> l2 =
                 new Quantity<>(12.0, LengthUnit.INCHES);
 
         System.out.println(l1.equals(l2));
 
-        Quantity<LengthUnit> result =
-                l1.add(l2, LengthUnit.FEET);
+        Quantity<LengthUnit> result =l1.add(l2, LengthUnit.FEET);
 
         System.out.println(result);
+        
+        System.out.println(l1.subtract(l2));
+        System.out.println(l1.subtract(l2, LengthUnit.INCHES));
+        
+        
 
         //Weight unit
         Quantity<WeightUnit> w1 =
@@ -50,6 +54,9 @@ public class QuantityMeasurementApp {
                 new Quantity<>(1000.0, WeightUnit.GRAM);
 
         System.out.println(w1.equals(w2));
+        
+        System.out.println(w1.subtract(w2));
+        System.out.println(w1.divide(w2));
         
         
         //Volume unit
@@ -61,7 +68,8 @@ public class QuantityMeasurementApp {
         System.out.println(v1.add(v2));
         System.out.println(v1.convertTo(VolumeUnit.MILLILITER));
         
-        
+        System.out.println(v1.subtract(v2));
+        System.out.println(v1.divide(v2));
         
     }
 }
