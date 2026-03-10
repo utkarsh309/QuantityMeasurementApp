@@ -129,6 +129,8 @@ public class Quantity<U extends IMeasurable> {
     
     private double performBaseArithmetic(Quantity<U> other,ArithmeticOperation operation) {
     	
+    	unit.validateOperationSupport(operation.name());
+    	
     	double base1=unit.convertToBaseUnit(value);
     	double base2=other.unit.convertToBaseUnit(other.value);
     	

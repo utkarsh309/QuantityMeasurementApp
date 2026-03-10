@@ -71,5 +71,17 @@ public class QuantityMeasurementApp {
         System.out.println(v1.subtract(v2));
         System.out.println(v1.divide(v2));
         
+        //Temperature Unit
+        Quantity<TemperatureUnit> t1 =new Quantity<>(0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> t2 =new Quantity<>(32, TemperatureUnit.FAHRENHEIT);
+
+        System.out.println(t1.equals(t2));
+        
+        Quantity<TemperatureUnit> temp =new Quantity<>(100, TemperatureUnit.CELSIUS);
+
+        System.out.println(temp.convertTo(TemperatureUnit.FAHRENHEIT));
+        
+//        temp.add(new Quantity<>(50, TemperatureUnit.CELSIUS));
     }
 }

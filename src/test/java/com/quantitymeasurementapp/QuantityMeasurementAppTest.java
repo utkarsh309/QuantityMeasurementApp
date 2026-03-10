@@ -49,6 +49,22 @@ public class QuantityMeasurementAppTest {
     	assertEquals(ml, ltr);
     }
     
+    //Equality Tests(Temperature)
+    @Test
+    public void testTemperatureEquality() {
+
+        Quantity<TemperatureUnit> t1 =
+                new Quantity<>(0, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> t2 =
+                new Quantity<>(32, TemperatureUnit.FAHRENHEIT);
+
+        assertTrue(t1.equals(t2));
+    }
+    
+    
+    
+    
     
   
     // Conversion Tests (Length)
@@ -94,6 +110,25 @@ public class QuantityMeasurementAppTest {
     	assertEquals(new Quantity<>(1.0,VolumeUnit.LITER),result);
 
     }
+    
+    // conversion Tests(Temperature)
+    @Test
+    public void testTemperatureConversion() {
+
+        Quantity<TemperatureUnit> t =
+                new Quantity<>(100, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> result =
+                t.convertTo(TemperatureUnit.FAHRENHEIT);
+
+        assertEquals(
+                new Quantity<>(212, TemperatureUnit.FAHRENHEIT),
+                result
+        );
+    }
+    
+    
+    
 
     
     // Addition Tests (Length)
@@ -149,6 +184,22 @@ public class QuantityMeasurementAppTest {
     	
     }
     
+    //Addition tests(Temperature)
+    @Test
+    public void testTemperatureAdditionNotSupported() {
+
+        Quantity<TemperatureUnit> t1 =
+                new Quantity<>(100, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> t2 =
+                new Quantity<>(50, TemperatureUnit.CELSIUS);
+
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> t1.add(t2)
+        );
+    }
+    
     //Subtraction Tests
     @Test
     public void testSubtraction_sameUnit() {
@@ -167,6 +218,21 @@ public class QuantityMeasurementAppTest {
         Quantity<LengthUnit> q2 = new Quantity<>(6, LengthUnit.INCHES);
 
         assertEquals(new Quantity<>(9.5, LengthUnit.FEET), q1.subtract(q2));
+    }
+    
+    @Test
+    public void testTemperatureSubtractionNotSupported() {
+
+        Quantity<TemperatureUnit> t1 =
+                new Quantity<>(100, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> t2 =
+                new Quantity<>(50, TemperatureUnit.CELSIUS);
+
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> t1.subtract(t2)
+        );
     }
     
     //Divison Tests
@@ -195,6 +261,21 @@ public class QuantityMeasurementAppTest {
         Quantity<LengthUnit> q2 = new Quantity<>(0, LengthUnit.FEET);
 
         assertThrows(ArithmeticException.class, () -> q1.divide(q2));
+    }
+    
+    @Test
+    public void testTemperatureDivisionNotSupported() {
+
+        Quantity<TemperatureUnit> t1 =
+                new Quantity<>(100, TemperatureUnit.CELSIUS);
+
+        Quantity<TemperatureUnit> t2 =
+                new Quantity<>(50, TemperatureUnit.CELSIUS);
+
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> t1.divide(t2)
+        );
     }
 
  
