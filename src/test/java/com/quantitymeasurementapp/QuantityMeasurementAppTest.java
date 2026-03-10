@@ -22,8 +22,6 @@ public class QuantityMeasurementAppTest {
         assertEquals(feet, inches);
     }
     
-    
-
 
     // Equality Tests (Weight)
    
@@ -52,8 +50,6 @@ public class QuantityMeasurementAppTest {
     }
     
     
-
-
   
     // Conversion Tests (Length)
    
@@ -97,7 +93,6 @@ public class QuantityMeasurementAppTest {
     	
     	assertEquals(new Quantity<>(1.0,VolumeUnit.LITER),result);
 
-    	
     }
 
     
