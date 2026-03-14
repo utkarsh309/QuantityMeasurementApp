@@ -1,15 +1,24 @@
 package com.quantitymeasurementapp.repository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.quantitymeasurementapp.entity.QuantityMeasurementEntity;
 import com.quantitymeasurementapp.exception.DatabaseException;
 import com.quantitymeasurementapp.util.ConnectionPool;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
 public class QuantityMeasurementDatabaseRepository
         implements IQuantityMeasurementRepository {
+	
+	private final ConnectionPool pool = ConnectionPool.getInstance();
+	public QuantityMeasurementDatabaseRepository() {
+	    createTableIfNotExists();
+	}
 
     private static final String INSERT_SQL =
             "INSERT INTO quantity_measurement(operation, operand1, operand2, result) VALUES (?, ?, ?, ?)";
@@ -17,7 +26,28 @@ public class QuantityMeasurementDatabaseRepository
     private static final String SELECT_SQL =
             "SELECT operation, operand1, operand2, result FROM quantity_measurement";
 
-    private final ConnectionPool pool = ConnectionPool.getInstance();
+    
+    private void createTableIfNotExists() {
+
+        String sql = """
+            CREATE TABLE IF NOT EXISTS quantity_measurement (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                operation VARCHAR(50),
+                operand1 VARCHAR(50),
+                operand2 VARCHAR(50),
+                result VARCHAR(50)
+            )
+            """;
+
+        try (Connection connection = pool.getConnection();
+             Statement stmt = connection.createStatement()) {
+
+            stmt.execute(sql);
+
+        } catch (SQLException e) {
+            throw DatabaseException.queryFailed(sql, e);
+        }
+    }
 
     @Override
     public void save(QuantityMeasurementEntity entity) {

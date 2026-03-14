@@ -37,5 +37,9 @@ public class QuantityMeasurementEntity implements Serializable {
         return result;
     }
     
+    public String toString() {
+    	return operand1 +" "+ operation +" " +operand2 +" = "+result; 
+    }
+    
     
 }

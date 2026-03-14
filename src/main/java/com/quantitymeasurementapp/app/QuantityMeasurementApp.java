@@ -4,16 +4,26 @@ import com.quantitymeasurementapp.controller.QuantityMeasurementController;
 import com.quantitymeasurementapp.entity.QuantityDTO;
 import com.quantitymeasurementapp.repository.IQuantityMeasurementRepository;
 import com.quantitymeasurementapp.repository.QuantityMeasurementCacheRepository;
+import com.quantitymeasurementapp.repository.QuantityMeasurementDatabaseRepository;
 import com.quantitymeasurementapp.service.IQuantityMeasurementService;
 import com.quantitymeasurementapp.service.QuantityMeasurementServiceImpl;
+import com.quantitymeasurementapp.util.ApplicationConfig;
 
 public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
         // Step 1: Create repository
-        IQuantityMeasurementRepository repo =
-                QuantityMeasurementCacheRepository.getInstance();
+    	IQuantityMeasurementRepository repo;
+
+		if (ApplicationConfig.get("repository.type").equals("database")) {
+
+			repo = new QuantityMeasurementDatabaseRepository();
+
+		} else {
+
+			repo = QuantityMeasurementCacheRepository.getInstance();
+		}
 
         // Step 2: Create service
         IQuantityMeasurementService service =
@@ -132,5 +142,9 @@ public class QuantityMeasurementApp {
         } catch (Exception e) {
             System.out.println("Temperature Divide Error: " + e.getMessage());
         }
+        
+        System.out.println("\n----- DATABASE RECORDS -----");
+
+        repo.getAllOperations().forEach(System.out::println);
     }
 }
