@@ -4,9 +4,11 @@ Trainee – Utkarsh
 
 ## 📌 Project Overview
 
-A scalable **Quantity Measurement System** implemented using clean Object-Oriented Programming (OOP) principles.  
+A scalable Quantity Measurement System built using Object-Oriented Programming (OOP) principles.
 
-The system evolved progressively from basic equality checks to a fully extensible unit conversion framework, supporting multiple units, cross-unit comparisons, and a structured conversion API.
+The project evolved from basic unit comparison to a generic and extensible system supporting multiple categories like Length, Weight, Volume, and Temperature with unit conversion and arithmetic operations.
+
+It is further developed into a Spring Boot application with REST APIs, database integration using JPA, and secured using Spring Security, OAuth2, and JWT.
 
 ---
 
