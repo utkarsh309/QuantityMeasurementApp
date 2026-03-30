@@ -31,20 +31,20 @@ public class OAuthController {
     @GetMapping("/oauth-success")
     public Map<String, Object> success(@AuthenticationPrincipal OAuth2User user) {
 
-        // 🔹 Extract user details from Google
+        //  Extract user details from Google
         String email = user.getAttribute("email");
         String name = user.getAttribute("name");
 
-        // 🔹 Check if user already exists in DB
+        //  Check if user already exists in DB
         UserEntity existingUser = userRepository.findByUsername(email).orElse(null);
 
         if (existingUser == null) {
 
-            // 🔹 Create new user for OAuth login
+            //  Create new user for OAuth login
             UserEntity newUser = new UserEntity();
             newUser.setUsername(email);
 
-            // 🔐 Always encode password (even dummy)
+            //  Always encode password (even dummy)
             newUser.setPassword(passwordEncoder.encode("oauth_user"));
 
             userRepository.save(newUser);
