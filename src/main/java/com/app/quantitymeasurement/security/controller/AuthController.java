@@ -16,6 +16,7 @@ import com.app.quantitymeasurement.security.repository.UserRepository;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
     @Autowired
