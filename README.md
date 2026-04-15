@@ -1,88 +1,108 @@
 # Quantity Measurement Application
-
 Trainee – Utkarsh
 
-## 🚀 Deployment Links  
-
+## 🚀 Deployment Links
 - **Frontend Deployed URL:** http://quanment-frontend.s3-website.ap-south-1.amazonaws.com
 - **Backend Deployed URL:**  http://13.201.88.166:8761/
 - **Swagger URL:** http://13.201.88.166:8080/swagger-ui/index.html
 
+---
+
 ## 📌 Project Overview
 
-A scalable Quantity Measurement System built using Object-Oriented Programming (OOP) principles.
+A scalable **Quantity Measurement System** built on a **microservices architecture** using Spring Boot, designed around Object-Oriented Programming principles.
 
-The project evolved from basic unit comparison to a generic and extensible system supporting multiple categories like Length, Weight, Volume, and Temperature with unit conversion and arithmetic operations.
+The core domain logic centers on a generic `Quantity<U extends IMeasurable>` class that models any measurable value and its unit. Measurement categories — **Length**, **Weight**, **Volume**, and **Temperature** — are implemented as enums that each satisfy the `IMeasurable` interface, enabling type-safe unit conversion and arithmetic (compare, convert, add, subtract, divide) across all categories.
 
-It is further developed into a Spring Boot application with REST APIs, database integration using JPA, and secured using Spring Security, OAuth2, and JWT.
+The system is exposed as REST APIs through a **QMA Service** and secured end-to-end via an **Auth Service** that supports both **JWT-based login/registration** and **Google OAuth2** social login. An **API Gateway** sits in front of all services, handling JWT validation and routing. Service discovery and inter-service registration is managed by a **Eureka Server**. All operations (compare, convert, add, subtract, divide) are persisted to a **MySQL database** via Spring Data JPA and are scoped per authenticated user, enabling operation history retrieval. The APIs are fully documented via **Swagger / SpringDoc OpenAPI**.
 
 ---
 
-
 ## 🏗 Architecture Hierarchy
 
-QuantityMeasurementApp  
-│  
-├── controller  
-│ └── QuantityMeasurementController (REST API Layer)  
-│  
-├── service  
-│ ├── QuantityMeasurementService (Business Logic)  
-│ └── QuantityMeasurementServiceImpl (Implementation)   
-│  
-├── repository  
-│ └── QuantityMeasurementRepository (JPA Repository Layer)  
-│  
-├── model  
-│ ├── QuantityModel (Core Domain Model)  
-│ ├── QuantityMeasurementEntity (Database Entity)  
-│ ├── QuantityDTO (Response DTO)  
-│ └── QuantityInputDTO (Request DTO)  
-│  
-├── core (Generic Measurement Engine)  
-│ ├── IMeasurable (Unit Interface)  
-│ ├── Quantity<U extends IMeasurable> (Generic Class)  
-│ ├── SupportsArithmetic (Marker Interface)  
-│ │  
-│ ├── LengthUnit (Enum)  
-│ ├── WeightUnit (Enum)  
-│ ├── VolumeUnit (Enum)  
-│ └── TemperatureUnit (Enum)  
-│  
-├── enums  
-│ └── OperationType (ADD, SUBTRACT, DIVIDE, etc.)  
-│  
-├── exception  
-│ ├── QuantityMeasurementException (Custom Exception)  
-│ └── GlobalExceptionHandler (Centralized Handling)  
-│  
-├── security (Spring Security + JWT + OAuth2)  
-│ │  
-│ ├── config  
-│ │ └── SecurityConfig (Security Rules & Filters)  
-│ │  
-│ ├── controller  
-│ │ ├── AuthController (Login/Register APIs)  
-│ │ └── OAuthController (OAuth2 Flow)  
-│ │  
-│ ├── dto  
-│ │ └── RegisterRequestDTO (User Registration Data)  
-│ │  
-│ ├── entity  
-│ │ └── UserEntity (User Table Mapping)  
-│ │  
-│ ├── jwt  
-│ │ ├── JwtFilter (Request Interceptor)  
-│ │ └── JwtUtil (Token Generation & Validation)  
-│ │  
-│ ├── repository  
-│ │ └── UserRepository (User Persistence)  
-│ │  
-│ └── service  
-│ └── CustomUserDetailsService (User Authentication Logic)  
-│  
-└── main  
-└── QuantityMeasurementApplication (Spring Boot Entry Point)  
+```
+Client (Frontend / Swagger UI)
+        │
+        ▼
+┌─────────────────────────────┐
+│        API Gateway          │  Port: 8090
+│  • JWT Validation Filter    │
+│  • Route: /auth/** → Auth   │
+│  • Route: /api/**  → QMA   │
+│  • CORS Configuration       │
+└────────────┬────────────────┘
+             │
+     ┌───────┴────────┐
+     ▼                ▼
+┌──────────────┐  ┌───────────────────────────────┐
+│ Auth Service │  │         QMA Service            │
+│  Port: 8081  │  │         Port: 8080             │
+│              │  │                                │
+│ Controllers: │  │ Controller:                    │
+│  /auth/login │  │  POST /api/v1/quantities/      │
+│  /auth/reg.. │  │    compare | convert           │
+│  /auth/oauth │  │    add | subtract | divide     │
+│  -success    │  │  GET  /api/v1/quantities/      │
+│              │  │    history/{operation}         │
+│ JWT (JJWT)   │  │                                │
+│ BCrypt       │  │ Core OOP Layer:                │
+│ OAuth2/Google│  │  IMeasurable (interface)       │
+│ Spring Sec.  │  │  SupportsArithmetic (func.if.) │
+│              │  │  Quantity<U> (generic class)   │
+│ JPA Entities:│  │  LengthUnit / WeightUnit /     │
+│  UserEntity  │  │  VolumeUnit / TemperatureUnit  │
+└──────┬───────┘  └──────────────┬────────────────┘
+       │                         │
+       └────────────┬────────────┘
+                    ▼
+         ┌──────────────────┐
+         │   MySQL Database │
+         │  db: utkarsh     │
+         │  • users         │
+         │  • qty_measures  │
+         └──────────────────┘
+
+All services register with:
+┌──────────────────────┐
+│    Eureka Server     │  Port: 8761
+│  Service Discovery   │
+└──────────────────────┘
+```
+
+### Microservices Breakdown
+
+| Service | Port | Responsibility |
+|---|---|---|
+| `eureka-server` | 8761 | Service registry & discovery |
+| `api-gateway` | 8090 | JWT auth filter, routing, CORS |
+| `auth-service` | 8081 | Register, login, Google OAuth2, JWT generation |
+| `qma-service` | 8080 | Unit operations (compare/convert/add/subtract/divide), history, Swagger |
+
+### Core OOP Design (inside `qma-service`)
+
+```
+IMeasurable (interface)
+├── getConversionFactor()
+├── convertToBaseUnit(value)
+├── convertFromBaseUnit(baseValue)
+├── getUnitName()
+└── validateOperationSupport(operation)
+        ▲
+        │ implements
+        ├── LengthUnit      (FEET, INCH, YARD, CENTIMETER, METER, KILOMETER, ...)
+        ├── WeightUnit      (GRAM, KILOGRAM, POUND, OUNCE, ...)
+        ├── VolumeUnit      (LITRE, MILLILITRE, GALLON, ...)
+        └── TemperatureUnit (CELSIUS, FAHRENHEIT, KELVIN)
+                             (overrides convertToBaseUnit / convertFromBaseUnit
+                              for formula-based conversion)
+
+Quantity<U extends IMeasurable>
+├── convertTo(U targetUnit)
+├── add(Quantity<U> other)
+├── subtract(Quantity<U> other)
+├── divide(Quantity<U> other)
+└── equals()  ← comparison via base-unit normalization
+```
 
 ---
 
@@ -192,3 +212,10 @@ QuantityMeasurementApp
 - Added JWT-based token authentication
 - Implemented OAuth2 login support
 - Secured REST APIs with role-based access
+
+### 🟢 UC21 – QMA Microservice Architecture
+
+- Decomposed the monolithic QMA application into independently deployable microservices (eureka-server, api-gateway, auth-service, qma-service)
+- Configured Eureka Server for service discovery and registration across all microservices
+- Implemented API Gateway with JWT validation filter, dynamic routing (/auth/**, /api/**), and global CORS configuration
+- Containerized all services using Dockerfiles and connected them to a shared MySQL database with JPA-managed schemas
