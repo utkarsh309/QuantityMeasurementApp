@@ -2,6 +2,12 @@
 
 Trainee – Utkarsh
 
+## 🚀 Deployment Links  
+
+- **Frontend Deployed URL:** http://quanment-frontend.s3-website.ap-south-1.amazonaws.com
+- **Backend Deployed URL:**  http://13.201.88.166:8761/
+- **Swagger URL:** http://13.201.88.166:8080/swagger-ui/index.html
+
 ## 📌 Project Overview
 
 A scalable Quantity Measurement System built using Object-Oriented Programming (OOP) principles.
@@ -11,6 +17,7 @@ The project evolved from basic unit comparison to a generic and extensible syste
 It is further developed into a Spring Boot application with REST APIs, database integration using JPA, and secured using Spring Security, OAuth2, and JWT.
 
 ---
+
 
 ## 🏗 Architecture Hierarchy
 
